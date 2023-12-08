@@ -1,0 +1,43 @@
+---- NOTES ----
+
+
+ASSUMPTION:
+Calculating productivity for vairable FixtureType
+
+UID	EquipmentID	BathNo	RunNumber	NthTag	WO	LeachDepth	FixtureType	WO_ITEM		WO_Quantity	WO_Releach	ProductSize
+345	ACLS_Wetbench_2	5	16		1	4066638	0		2		265-210-4104-00	192		0		2
+345	ACLS_Wetbench_2	5	16		2	4066630	0		2		265-210-4101-00	288		0		2
+345	ACLS_Wetbench_2	5	16		3	4063425	0		1		272-210-1504-00	40		0		1
+345	ACLS_Wetbench_2	5	16		4	4063425	0		2		272-210-1504-00	39		0		1
+
+This particular run looked unsual to me as the FixtureType was not consistent for the all items in the run. This is the only instantance of this happening. 
+
+As a result there are two plausible ways to calculate productivity:
+- calculate the productivity of a run by summing the productivity of each individual NthTag within the run. Productivity of run = SUM( Productivity of each NthTag )
+- calculate productivity based on the smallest capacity of the NthTags. Productivity of run = SUM( WO_Quantity ) / MIN(BathCapacity)
+
+Took the assumption that if one fixture type reduces the BathCapacity for one NthTag then it reduces the capacity of the overall bath. Therefore the latter calculation was used:
+Productivity of run = SUM( WO_Quantity ) / MIN(BathCapacity)
+
+This assumption only affected 1 run.
+
+
+ASSUMPTION:
+Productivity greater than 1
+
+There were two runs where the WO_Quantity was greater than the BathCapacity. 
+Assumed to be plausible and included in the analysis.
+
+EquipmentID	BathNo	RunNumber	Productivity
+ACLS_Wetbench_1	3	10		1.03448275862069
+ACLS_Wetbench_1	7	20		1.03333333333333
+
+
+NOTES:
+
+Included both 'Completed' and 'Running' statuses in calculation of productivity as even if the process fails or otherwise it will still have been productive in that period.
+A separate analysis would be expected to look at process failure rates.
+
+There was a run were the StopTime was greater than the Endtime. This is not possible. For this purpose the record was excluded
+Runid = ACLS_Wetbench_2 | 7 | 4
+
